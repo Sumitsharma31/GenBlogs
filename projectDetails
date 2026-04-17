@@ -1,0 +1,130 @@
+Build a full-stack web application called “AI-Assisted Smart Content Blog Platform”.
+
+🎯 Core Objective:
+Create a blogging platform that automatically generates high-quality, SEO-friendly blog posts based on trending topics using AI. The system must focus on content quality, structured writing, and user readability instead of spam-like automation.
+
+---
+
+🧠 Backend Requirements (Node.js + Express):
+
+1. Implement a cron job using node-cron that runs every 4 hours:
+   - Fetch trending topics from a news API (or mock data)
+   - Filter topics (remove duplicates, avoid generic topics, prioritize niche + trending topics)
+
+2. Integrate Gemini API for content generation:
+   - Generate blog posts with:
+     - Title
+     - Introduction
+     - H2 and H3 headings
+     - Detailed explanation
+     - Actionable insights
+     - FAQ section
+   - Ensure human-like, non-repetitive, and helpful tone
+
+3. Post-processing:
+   - Generate SEO metadata (meta title, description)
+   - Create URL slug
+   - Clean formatting (Markdown or HTML)
+
+4. Image Integration:
+   - Fetch relevant images using Unsplash API based on blog keywords
+   - Add image URL and alt text to blog
+   - Optionally support AI-generated images
+
+5. Database (MongoDB):
+   - Blog schema:
+     - title
+     - slug
+     - content
+     - image
+     - tags
+     - metaTitle
+     - metaDescription
+     - status (draft/published)
+     - createdAt
+
+6. API Endpoints:
+   - GET /blogs → list blogs
+   - GET /blogs/:slug → single blog
+   - POST /generate → trigger blog generation manually
+   - PATCH /blogs/:id → update status (draft/publish)
+
+---
+
+🎨 Frontend Requirements (Next.js + Tailwind CSS):
+
+⚠️ IMPORTANT: Design must be MOBILE-FIRST and fully responsive.
+
+1. Pages:
+   - Home Page (list of blogs)
+   - Blog Detail Page
+   - Admin Dashboard (optional)
+
+2. UI Design Guidelines:
+   - Clean, modern, minimal design
+   - Mobile-first layout (optimize for small screens first)
+   - Use responsive grid and flexbox
+   - Smooth typography and spacing
+   - Sticky header with navigation
+   - Card-based blog layout
+
+3. Home Page:
+   - Blog cards with:
+     - Image
+     - Title
+     - Short description
+     - Read more button
+   - Responsive grid:
+     - 1 column (mobile)
+     - 2 columns (tablet)
+     - 3 columns (desktop)
+
+4. Blog Page:
+   - Hero image
+   - Title + metadata
+   - Well-formatted content (headings, paragraphs, spacing)
+   - Inline images between sections
+   - FAQ section styling
+
+5. Admin Dashboard:
+   - List of generated blogs
+   - Status toggle (draft/published)
+   - Preview option
+
+---
+
+📱 Mobile Responsiveness (VERY IMPORTANT):
+- Use Tailwind responsive utilities (sm, md, lg)
+- Optimize font sizes and spacing for small screens
+- Ensure touch-friendly buttons
+- Avoid overflow issues
+- Lazy load images for performance
+
+---
+
+⚡ Additional Features:
+- Loading states (skeleton UI)
+- Error handling
+- SEO optimization (meta tags, structured content)
+- Clean code structure (modular components and services)
+
+---
+
+🧩 Tech Stack:
+- Frontend: Next.js + Tailwind CSS
+- Backend: Node.js + Express
+- Database: MongoDB
+- AI: Gemini API
+- Image API: Unsplash
+
+---
+
+🎯 Output Expectation:
+Generate complete code with:
+- Folder structure
+- Backend and frontend setup
+- Sample components
+- API integration
+- Clean, readable, and scalable architecture
+
+Ensure the final result looks like a real-world production-ready project, not a basic demo.
