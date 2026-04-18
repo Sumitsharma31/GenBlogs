@@ -8,7 +8,7 @@ const newsletterRoutes = require('./routes/newsletter');
 const { startCronJob } = require('./jobs/cronJob');
 
 const app = express();
-const PORT = 8080; // Hardcoded to 8080 for internal proxying via Next.js
+const PORT = process.env.BACKEND_PORT || 8080; // Defaults to 8080 for internal proxying via Next.js
 console.log('DEBUG: process.env.PORT =', process.env.PORT);
 console.log('DEBUG: ADMIN_SECRET =', process.env.ADMIN_SECRET ? 'Defined' : 'Undefined');
 
@@ -55,25 +55,25 @@ app.use((err, req, res, next) => {
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 async function start() {
-  await connectDB();
-  console.log(`🔑 Gemini Key loaded: ${process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 7) + '...' : 'MISSING'}`);
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n🚀 AI Blog Platform API running on http://0.0.0.0:${PORT}`);
-    console.log(`📡 Network access: http://192.168.0.15:${PORT}`);
-    console.log(`📚 Endpoints:`);
-    console.log(`   GET    http://localhost:${PORT}/blogs`);
-    console.log(`   GET    http://localhost:${PORT}/blogs/:slug`);
-    console.log(`   POST   http://localhost:${PORT}/blogs/generate`);
-    console.log(`   PATCH  http://localhost:${PORT}/blogs/:id`);
-    console.log(`   DELETE http://localhost:${PORT}/blogs/:id`);
-    console.log(`   GET    http://localhost:${PORT}/health\n`);
-  });
+  try {
+    console.log('📡 Attempting to connect to database...');
+    await connectDB();
+    
+    console.log(`🔑 Gemini Key loaded: ${process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 7) + '...' : 'MISSING'}`);
+    
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`\n🚀 AI Blog Platform API running on http://0.0.0.0:${PORT}`);
+      console.log(`📚 Health Check: http://localhost:${PORT}/health\n`);
+    });
 
-  // Start the cron scheduler
-  startCronJob();
+    // Start the cron scheduler
+    startCronJob();
+  } catch (err) {
+    console.error('CRITICAL: Failed to start server components:');
+    console.error(err);
+    // On Render, we might want to stay alive briefly to let logs flush
+    setTimeout(() => process.exit(1), 2000);
+  }
 }
 
-start().catch((err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
+start();
