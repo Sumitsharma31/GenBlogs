@@ -8,7 +8,7 @@ const newsletterRoutes = require('./routes/newsletter');
 const { startCronJob } = require('./jobs/cronJob');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 8080; // Hardcoded to 8080 for internal proxying via Next.js
 console.log('DEBUG: process.env.PORT =', process.env.PORT);
 console.log('DEBUG: ADMIN_SECRET =', process.env.ADMIN_SECRET ? 'Defined' : 'Undefined');
 
