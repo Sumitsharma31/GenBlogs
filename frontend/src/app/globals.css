@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+}
+
+@utility font-inter {
+  font-family: var(--font-inter);
+}
+
+@utility font-outfit {
+  font-family: var(--font-outfit);
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50;
+    font-family: var(--font-inter);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit);
+  }
+}
+
+.container {
+  @apply max-w-7xl mx-auto;
+}
+
+/* Custom Utilities */
+.glass {
+  @apply bg-white/80 backdrop-blur-md dark:bg-neutral-900/80;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600;
+}
+
+/* Typography styles for content rendering */
+.prose {
+  @apply max-w-none text-neutral-700 dark:text-neutral-300;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mt-12 mb-6 text-neutral-900 dark:text-white;
+}
+
+.prose h3 {
+  @apply text-xl font-bold mt-8 mb-4 text-neutral-900 dark:text-white;
+}
+
+.prose p {
+  @apply mb-6 leading-relaxed text-lg;
+}
+
+.prose ul, .prose ol {
+  @apply mb-6 ml-6 space-y-2;
+}
+
+.prose li {
+  @apply list-disc marker:text-indigo-500;
+}
