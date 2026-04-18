@@ -8,15 +8,39 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "GenBlog | Smart Content Platform",
-  description: "Experience high-quality, AI-generated blog posts on trending topics.",
+  title: {
+    template: "%s | GenBlog",
+    default: "GenBlog | Smart Content Platform",
+  },
+  description: "GenBlog is your premier AI-generated smart content platform. Experience high-quality blog posts on trending topics crafted by advanced artificial intelligence.",
+  keywords: ["genblog", "genblog ai", "genblog content", "gen blog", "AI blog platform", "artificial intelligence", "auto-generated content"],
+  authors: [{ name: "GenBlog AI" }],
+  creator: "GenBlog",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ai-blog-platform.vercel.app"),
   openGraph: {
     title: "GenBlog | Smart Content Platform",
-    description: "Experience high-quality, AI-generated blog posts on trending topics.",
+    description: "GenBlog is your premier AI-generated smart content platform. Experience high-quality blog posts on trending topics.",
     type: "website",
     locale: "en_US",
-    url: "https://ai-blog-platform.vercel.app",
+    url: "/",
     siteName: "GenBlog",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GenBlog | Smart Content Platform",
+    description: "Experience high-quality, AI-generated blog posts on trending topics.",
+    creator: "@genblog",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
