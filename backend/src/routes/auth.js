@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 // POST /auth/login
-// Verifies the admin secret and returns success
+// Verifies the admin secret and returns a JWT token
 router.post('/login', (req, res) => {
   try {
     const { secret } = req.body;
@@ -12,11 +13,14 @@ router.post('/login', (req, res) => {
     }
 
     if (secret === process.env.ADMIN_SECRET) {
+      // Generate a JWT token valid for 24 hours
+      const jwtSecret = process.env.JWT_SECRET || process.env.ADMIN_SECRET;
+      const token = jwt.sign({ role: 'admin' }, jwtSecret, { expiresIn: '24h' });
+
       return res.json({ 
         success: true, 
         message: 'Authenticated successfully',
-        // In a real app, we might return a JWT here. 
-        // For this simple implementation, we just confirm it's correct.
+        token
       });
     } else {
       return res.status(401).json({ success: false, message: 'Invalid admin secret' });

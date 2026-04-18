@@ -1,22 +1,60 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
 const { generateBlogFromTopic } = require('../services/blogGeneratorService');
 
 // Middleware to verify admin token
 const requireAdmin = (req, res, next) => {
-  const token = req.headers['x-admin-secret'] || req.query.adminSecret;
-  if (token !== process.env.ADMIN_SECRET) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  const authHeader = req.headers['authorization'];
+  let token = '';
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else {
+    // Fallback for older frontend client if still sending x-admin-secret but it's a jwt
+    token = req.headers['x-admin-secret'] || req.query.adminSecret;
   }
-  next();
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
+  }
+
+  try {
+    const jwtSecret = process.env.JWT_SECRET || process.env.ADMIN_SECRET;
+    const decoded = jwt.verify(token, jwtSecret);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+    req.admin = decoded;
+    next();
+  } catch (err) {
+    // If it's the exact raw admin secret, maybe allow it for backward compatibility briefly?
+    // User requested "real auth", so we enforce JWT.
+    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });
+  }
 };
 
 // GET /blogs — list all published blogs (or all for admin)
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 9, tag, q, admin } = req.query;
-    const isAdmin = admin === 'true' && req.headers['x-admin-secret'] === process.env.ADMIN_SECRET;
+    let isAdmin = false;
+    
+    if (admin === 'true') {
+      const authHeader = req.headers['authorization'];
+      let token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : req.headers['x-admin-secret'] || req.query.adminSecret;
+      
+      if (token) {
+        try {
+          const jwtSecret = process.env.JWT_SECRET || process.env.ADMIN_SECRET;
+          const decoded = jwt.verify(token, jwtSecret);
+          if (decoded.role === 'admin') isAdmin = true;
+        } catch (e) {
+          // invalid token, treat as non-admin
+        }
+      }
+    }
 
     const filter = isAdmin ? {} : { status: 'published' };
     if (tag) filter.tags = { $in: [tag] };
