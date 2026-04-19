@@ -5,7 +5,7 @@ import { getBlogs, searchBlogs, subscribeNewsletter } from '@/lib/api';
 import { Blog, PaginatedResponse } from '@/types';
 import BlogGrid from '@/components/BlogGrid';
 import { SkeletonGrid } from '@/components/SkeletonCard';
-import { Sparkles, TrendingUp, Search } from 'lucide-react';
+import { Sparkles, TrendingUp, Search, BookOpen } from 'lucide-react';
 
 export default function Home() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -81,11 +81,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-16 py-12 sm:py-20">
-      
+
       {/* Hero Section */}
       <section className="container px-4 text-center">
-        
-        
+
+
         {/* Search */}
         <form
           onSubmit={onSearchSubmit}
@@ -111,13 +111,13 @@ export default function Home() {
       </section>
 
       {/* Featured Section */}
-      <section className="container px-4">
-        <div className="mb-10 flex items-center justify-between">
+      <section className="container px-2">
+        <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600/10 text-indigo-600 dark:bg-indigo-600/20 dark:text-indigo-400">
-              <TrendingUp className="h-5 w-5" />
+              <BookOpen className="h-5 w-5" />
             </div>
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white sm:text-3xl">Trending Now</h2>
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white sm:text-3xl">Latest Articles</h2>
           </div>
           <div className="hidden h-px flex-1 bg-neutral-200 dark:bg-neutral-800 mx-8 sm:block"></div>
           <button className="text-sm font-bold text-indigo-600 hover:underline dark:text-indigo-400">
@@ -147,7 +147,7 @@ export default function Home() {
         <div className="relative overflow-hidden rounded-[2.5rem] bg-indigo-600 px-8 py-16 text-center text-white sm:px-20">
           <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
           <div className="absolute -right-20 -bottom-20 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
-          
+
           <h2 className="relative mb-4 text-3xl font-extrabold sm:text-4xl">Never miss a trend</h2>
           <p className="relative mx-auto mb-10 max-w-lg text-indigo-100/90 text-lg">
             Subscribe to our newsletter and get the latest AI-generated insights delivered directly to your inbox.

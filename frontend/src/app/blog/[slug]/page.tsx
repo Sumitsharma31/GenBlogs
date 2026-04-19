@@ -1,19 +1,20 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getBlogBySlug } from '@/lib/api';
 import { Blog } from '@/types';
 import BlogContent from '@/components/BlogContent';
 import FAQSection from '@/components/FAQSection';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Tag, 
-  Share2, 
+import { useToast } from '@/components/ToastProvider';
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Tag,
+  Share2,
   ChevronRight,
   User,
   ExternalLink
@@ -24,6 +25,35 @@ export default function BlogDetailPage() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: blog?.title,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          type: 'success',
+          title: 'Link copied!',
+          description: 'The blog link has been copied to your clipboard.',
+        });
+      } catch (err) {
+        toast({
+          type: 'error',
+          title: 'Failed to copy',
+          description: 'Could not copy the link to clipboard.',
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     async function fetchBlog() {
@@ -57,15 +87,7 @@ export default function BlogDetailPage() {
   }
 
   if (error || !blog) {
-    return (
-      <div className="container flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-        <h1 className="mb-4 text-4xl font-bold text-neutral-900 dark:text-white">404 - Not Found</h1>
-        <p className="mb-8 text-neutral-600 dark:text-neutral-400">The blog post you're looking for doesn't exist or has been removed.</p>
-        <Link href="/" className="rounded-xl bg-indigo-600 px-8 py-3 font-bold text-white transition-opacity hover:opacity-90">
-          Back to Home
-        </Link>
-      </div>
-    );
+    notFound();
   }
 
   const formattedDate = new Date(blog.createdAt).toLocaleDateString('en-US', {
@@ -103,8 +125,8 @@ export default function BlogDetailPage() {
       {/* Hero Header */}
       <header className="container relative py-12 px-4 sm:py-20">
         <div className="mx-auto max-w-4xl">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:gap-3 transition-all dark:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -120,37 +142,24 @@ export default function BlogDetailPage() {
               <Clock className="h-4 w-4 text-indigo-600" />
               <span>{blog.readingTime} min read</span>
             </div>
+            <button
+              onClick={handleShare}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
           </div>
 
           <h1 className="mb-8 text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-5xl md:text-6xl">
             {blog.title}
           </h1>
 
-          <div className="flex flex-wrap items-center justify-between gap-6 border-y border-neutral-100 py-8 dark:border-neutral-800">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 text-white font-bold">
-                AI
-              </div>
-              <div>
-                <div className="font-bold text-neutral-900 dark:text-white">Smart Content AI</div>
-                <div className="text-xs text-neutral-500">Editorial Assistant</div>
-              </div>
-            </div>
-            
-            <div className="flex gap-2">
-              <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800">
-                <Share2 className="h-4 w-4" />
-              </button>
-              <button className="flex h-40 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-bold text-white transition-opacity hover:opacity-90">
-                Follow
-              </button>
-            </div>
-          </div>
+
         </div>
       </header>
 
       {/* Featured Image */}
-      <div className="container px-4">
+      <div className="container px-2">
         <div className="relative mx-auto aspect-[21/9] max-w-6xl overflow-hidden rounded-[2.5rem] shadow-2xl shadow-indigo-500/10">
           <Image
             src={blog.image.url}
@@ -160,7 +169,7 @@ export default function BlogDetailPage() {
             priority
           />
           {blog.image.credit && (
-            <div className="absolute bottom-4 right-4 rounded-lg bg-black/50 px-3 py-1.5 text-[10px] text-white backdrop-blur-md">
+            <div className="absolute bottom-1 right-2 rounded-lg bg-black/50 px-1 py-1 text-[5px] text-white backdrop-blur-md">
               {blog.image.credit}
             </div>
           )}
@@ -168,19 +177,18 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="container relative z-10 -mt-10 px-4 sm:-mt-20">
-        <div className="mx-auto max-w-4xl rounded-[2.5rem] bg-white p-8 border border-neutral-100 shadow-xl shadow-neutral-200/50 dark:bg-neutral-950 dark:border-neutral-800 dark:shadow-none sm:p-16">
+      <div className="container relative z-10 mt-8 px-4 sm:mt-12">
+        <div className="mx-auto max-w-4xl rounded-[2.5rem] bg-white p-6 border border-neutral-100 shadow-xl shadow-neutral-200/50 dark:bg-neutral-950 dark:border-neutral-800 dark:shadow-none sm:p-12">
           {/* Tags */}
           <div className="mb-10 flex flex-wrap gap-2">
             {blog.tags.map(tag => (
-              <Link 
-                key={tag} 
-                href={`/?tag=${tag}`}
-                className="flex items-center gap-1.5 rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2 text-sm font-bold text-neutral-600 transition-colors hover:border-indigo-200 hover:text-indigo-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:text-indigo-400"
+              <div
+                key={tag}
+                className="flex items-center gap-1.5 rounded-xl border border-neutral-100 bg-neutral-50 px-2 py-2 text-sm font-bold text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400"
               >
                 <Tag className="h-3.5 w-3.5" />
                 {tag}
-              </Link>
+              </div>
             ))}
           </div>
 
@@ -189,27 +197,27 @@ export default function BlogDetailPage() {
 
           {/* FAQ Section */}
           <FAQSection faqs={faqs} />
-          
+
           {/* Post Footer */}
           <div className="mt-20 border-t border-neutral-100 pt-16 dark:border-neutral-800">
-             <div className="flex flex-col items-center justify-between gap-8 sm:flex-row">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400">
-                    <User className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-neutral-900 dark:text-white">Written by AI</h4>
-                    <p className="text-sm text-neutral-500">Crafted with Gemini 1.5</p>
-                  </div>
+            <div className="flex flex-col items-center justify-between gap-8 sm:flex-row">
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400">
+                  <User className="h-8 w-8" />
                 </div>
-                <Link 
-                  href="/"
-                  className="group flex items-center gap-2 rounded-2xl bg-neutral-900 px-8 py-4 font-bold text-white transition-all hover:bg-neutral-800 dark:bg-white dark:text-neutral-900"
-                >
-                  Explore More Topics
-                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-             </div>
+                <div>
+                  <h4 className="text-xl font-bold text-neutral-900 dark:text-white">Written by AI</h4>
+                  <p className="text-sm text-neutral-500">Crafted with Gemini 1.5</p>
+                </div>
+              </div>
+              <Link
+                href="/"
+                className="group flex items-center gap-2 rounded-2xl bg-neutral-900 px-8 py-4 font-bold text-white transition-all hover:bg-neutral-800 dark:bg-white dark:text-neutral-900"
+              >
+                Explore More Topics
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
