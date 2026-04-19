@@ -57,6 +57,9 @@ export const metadata: Metadata = {
     creator: "@genblog",
     images: ["/og-image.png"],
   },
+  verification: {
+    google: "wqUHJf-VdWUYFMO9Lf_RlVGdp3chu9z5zw0lUFliqFE",
+  },
   robots: {
     index: true,
     follow: true,
