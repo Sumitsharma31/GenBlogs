@@ -9,27 +9,53 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | GenBlog",
-    default: "GenBlog | Smart Content Platform",
+    template: "%s | GenBlog - AI Smart Content Platform",
+    default: "GenBlog | Premier AI-Generated Content Platform",
   },
-  description: "GenBlog is your premier AI-generated smart content platform. Experience high-quality blog posts on trending topics crafted by advanced artificial intelligence.",
-  keywords: ["genblog", "genblog ai", "genblog content", "gen blog", "AI blog platform", "artificial intelligence", "auto-generated content"],
-  authors: [{ name: "GenBlog AI" }],
+  description: "GenBlog is an advanced AI-powered platform delivering high-quality, automated blog posts on trending topics. Experience the future of content generation with smart insights and automated blogging.",
+  keywords: [
+    "GenBlog",
+    "GenBlog AI",
+    "AI Blog Platform",
+    "AI Content Generation",
+    "Automated Blogging",
+    "Smart Content Platform",
+    "AI Writing Assistant",
+    "AI Insights",
+    "Trending Topics AI",
+    "Content Automation",
+    "Machine Learning Content",
+    "AI Article Generator"
+  ],
+  authors: [{ name: "GenBlog AI Team", url: "https://ai-blog-platform.vercel.app" }],
   creator: "GenBlog",
+  publisher: "GenBlog",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ai-blog-platform.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "GenBlog | Smart Content Platform",
-    description: "GenBlog is your premier AI-generated smart content platform. Experience high-quality blog posts on trending topics.",
+    title: "GenBlog | Premier AI-Generated Content Platform",
+    description: "Discover high-quality, AI-powered blog posts on the latest trending topics. GenBlog simplifies content creation with advanced AI.",
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "GenBlog",
+    siteName: "GenBlog AI",
+    images: [
+      {
+        url: "/og-image.png", // Assuming an OG image exists or will be added
+        width: 1200,
+        height: 630,
+        alt: "GenBlog AI Content Platform",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GenBlog | Smart Content Platform",
-    description: "Experience high-quality, AI-generated blog posts on trending topics.",
+    title: "GenBlog | AI-Powered Smart Content",
+    description: "High-quality, AI-generated blog posts on trending topics. Stay ahead with GenBlog.",
     creator: "@genblog",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
