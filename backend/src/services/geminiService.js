@@ -13,7 +13,7 @@ async function generateBlogContent(topic) {
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `You are an expert blog writer. Write a comprehensive, SEO-optimized, human-like blog post about: "${topic}".
 

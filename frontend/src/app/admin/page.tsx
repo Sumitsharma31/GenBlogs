@@ -81,7 +81,12 @@ export default function AdminDashboard() {
           description: `Article moved to ${newStatus}.`,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        logout();
+        router.push('/admin/login');
+        return;
+      }
       toast({
         type: 'error',
         title: 'Failed to update status',
@@ -102,7 +107,12 @@ export default function AdminDashboard() {
           description: 'Article removed successfully.',
         });
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        logout();
+        router.push('/admin/login');
+        return;
+      }
       toast({
         type: 'error',
         title: 'Failed to delete',
@@ -129,6 +139,16 @@ export default function AdminDashboard() {
         });
       }
     } catch (err: any) {
+      if (err.response?.status === 401) {
+        toast({
+          type: 'error',
+          title: 'Session Expired',
+          description: 'Please login again to continue.',
+        });
+        logout();
+        router.push('/admin/login');
+        return;
+      }
       const message = err.response?.data?.message || 'Failed to generate blog. Check if Gemini API key is valid.';
       toast({
         type: 'error',

@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
 const { generateBlogFromTopic } = require('../services/blogGeneratorService');
 
-// Middleware to verify admin token
 const requireAdmin = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   let token = '';
@@ -23,14 +22,14 @@ const requireAdmin = (req, res, next) => {
   try {
     const jwtSecret = process.env.JWT_SECRET || process.env.ADMIN_SECRET;
     const decoded = jwt.verify(token, jwtSecret);
+    
     if (decoded.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Forbidden' });
     }
+    
     req.admin = decoded;
     next();
   } catch (err) {
-    // If it's the exact raw admin secret, maybe allow it for backward compatibility briefly?
-    // User requested "real auth", so we enforce JWT.
     return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });
   }
 };

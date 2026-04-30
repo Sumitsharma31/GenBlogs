@@ -1,0 +1,10 @@
+2026-04-30T15:52:15.202Z - Request: POST /generate
+2026-04-30T15:52:15.204Z - Auth Header: Present
+2026-04-30T15:52:15.205Z - Token extracted from Bearer: Length 148
+2026-04-30T15:52:15.207Z - Verifying with secret: Defined
+2026-04-30T15:52:15.209Z - Verification failed: invalid signature
+2026-04-30T15:52:39.473Z - Request: POST /generate
+2026-04-30T15:52:39.474Z - Auth Header: Present
+2026-04-30T15:52:39.475Z - Token extracted from Bearer: Length 148
+2026-04-30T15:52:39.475Z - Verifying with secret: Defined
+2026-04-30T15:52:39.477Z - Verified successfully
