@@ -30,7 +30,7 @@ const requireAdmin = (req, res, next) => {
     req.admin = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });
+    return res.status(401).json({ success: false, message: 'Unauthorized: Invalid or expired admin token' });
   }
 };
 

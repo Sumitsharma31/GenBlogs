@@ -13,7 +13,7 @@ async function generateBlogContent(topic) {
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are an expert blog writer. Write a comprehensive, SEO-optimized, human-like blog post about: "${topic}".
 
@@ -70,7 +70,9 @@ RESPONSE FORMAT (respond ONLY in this JSON structure, no extra text):
     console.error('Gemini generation error:', err.message);
     let errorMsg = err.message;
     if (err.message.includes('404')) {
-      errorMsg = 'Model not found (404). Please check if your Gemini API key has access to gemini-1.5-flash.';
+      errorMsg = 'Model not found (404). Please check if your Gemini API key has access to gemini-2.0-flash.';
+    } else if (err.message.includes('429')) {
+      errorMsg = 'Quota exceeded (429). You are making too many requests or have run out of free tier credits. Please wait a moment before trying again.';
     } else if (err.message.includes('401') || err.message.includes('403')) {
       errorMsg = 'Invalid API key or permission denied. Please check your GEMINI_API_KEY.';
     }
