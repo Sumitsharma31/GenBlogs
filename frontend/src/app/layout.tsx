@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { ToastProvider } from "@/components/ToastProvider";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -59,6 +60,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "wqUHJf-VdWUYFMO9Lf_RlVGdp3chu9z5zw0lUFliqFE",
+    other: {
+      "google-adsense-account": "ca-pub-3407443667160242",
+    },
   },
   robots: {
     index: true,
@@ -81,6 +85,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${outfit.variable} font-inter antialiased bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50`}>
+        <Script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3407443667160242"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <ToastProvider>
           <Header />
           <main className="min-h-screen">
